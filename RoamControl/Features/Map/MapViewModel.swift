@@ -362,7 +362,7 @@ final class MapViewModel: NSObject, MKLocalSearchCompleterDelegate {
                 return detail
             }
         }
-        return "Location details unavailable"
+        return String(localized: "Location details unavailable")
     }
 
     private func requestCurrentLocation(

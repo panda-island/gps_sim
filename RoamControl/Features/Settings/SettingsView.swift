@@ -170,11 +170,11 @@ struct SettingsView: View {
 
     private var connectionLabel: String {
         switch appModel.connectionState {
-        case .notConfigured: "Not paired"
-        case .ready: "Ready"
-        case .connecting: "Connecting"
-        case .active: "Active"
-        case .failed: "Problem"
+        case .notConfigured: String(localized: "Not paired")
+        case .ready: String(localized: "Ready")
+        case .connecting: String(localized: "Connecting")
+        case .active: String(localized: "Active")
+        case .failed: String(localized: "Problem")
         }
     }
 
@@ -296,15 +296,15 @@ struct SettingsView: View {
             let executableURL = Bundle.main.executableURL,
             let values = try? executableURL.resourceValues(forKeys: [.contentModificationDateKey]),
             let buildDate = values.contentModificationDate
-        else { return "Unknown" }
+        else { return String(localized: "Unknown") }
 
         return buildDate.formatted(date: .abbreviated, time: .shortened)
     }
 
     private var updateCheckTitle: String {
         switch releaseUpdateStatus {
-        case .checking: "Checking for Updates…"
-        default: "Check for Updates"
+        case .checking: String(localized: "Checking for Updates…")
+        default: String(localized: "Check for Updates")
         }
     }
 

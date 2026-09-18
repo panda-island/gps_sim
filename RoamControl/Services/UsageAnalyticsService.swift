@@ -629,15 +629,15 @@ enum SchedulerFailureReason: String {
     var pairingGuidance: String {
         switch self {
         case .unavailable:
-            "iOS background processing is unavailable. Check Background App Refresh for Roam Control in Settings, then try again."
+            String(localized: "iOS background processing is unavailable. Check Background App Refresh for Roam Control in Settings, then try again.")
         case .tooManyPendingRequests:
-            "iOS has too many pending background tasks. Let other tasks finish, then return to Roam Control and try pairing again."
+            String(localized: "iOS has too many pending background tasks. Let other tasks finish, then return to Roam Control and try pairing again.")
         case .notPermitted:
-            "iOS did not permit the pairing background task. Copy Diagnostics from Connection Health so this installation can be checked."
+            String(localized: "iOS did not permit the pairing background task. Copy Diagnostics from Connection Health so this installation can be checked.")
         case .immediateRunIneligible:
-            "iOS could not start pairing immediately under current system conditions. Keep Roam Control open and try again shortly."
+            String(localized: "iOS could not start pairing immediately under current system conditions. Keep Roam Control open and try again shortly.")
         case .unknown:
-            "iOS could not schedule pairing. Try again, and copy Diagnostics from Connection Health if it continues."
+            String(localized: "iOS could not schedule pairing. Try again, and copy Diagnostics from Connection Health if it continues.")
         }
     }
 }

@@ -302,7 +302,7 @@ struct HomeView: View {
             if let message = mapModel.errorMessage {
                 VStack {
                     Spacer()
-                    Text(message)
+                    Text(roamLocalized(message))
                         .font(.subheadline.weight(.medium))
                         .foregroundStyle(.white)
                         .padding(.horizontal, 16)

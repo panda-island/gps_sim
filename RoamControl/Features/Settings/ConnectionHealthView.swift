@@ -137,17 +137,17 @@ struct ConnectionHealthView: View {
     }
 
     private var coordinatesValue: String {
-        guard let activeTarget else { return "None" }
+        guard let activeTarget else { return String(localized: "None") }
         return String(format: "%.5f, %.5f", activeTarget.latitude, activeTarget.longitude)
     }
 
     private var pairingValue: String {
         switch appModel.pairingStatus {
-        case .checking: "Checking"
-        case .importing: "Importing"
-        case .notPaired: "Not paired"
-        case .paired: "Ready"
-        case .failed: "Problem"
+        case .checking: String(localized: "Checking")
+        case .importing: String(localized: "Importing")
+        case .notPaired: String(localized: "Not paired")
+        case .paired: String(localized: "Ready")
+        case .failed: String(localized: "Problem")
         }
     }
 
@@ -172,11 +172,11 @@ struct ConnectionHealthView: View {
     private var localDevVPNValue: String {
         switch diagnostics.state {
         case .notRun:
-            if case .active = appModel.deviceSession.phase { return "Connected" }
-            return "Not checked"
-        case .running: return "Checking"
-        case .passed: return "Reachable"
-        case .failed: return "Not reachable"
+            if case .active = appModel.deviceSession.phase { return String(localized: "Connected") }
+            return String(localized: "Not checked")
+        case .running: return String(localized: "Checking")
+        case .passed: return String(localized: "Reachable")
+        case .failed: return String(localized: "Not reachable")
         }
     }
 
@@ -204,13 +204,13 @@ struct ConnectionHealthView: View {
 
     private var sessionValue: String {
         switch appModel.deviceSession.phase {
-        case .idle: "Inactive"
-        case .openingLocalDevVPN: "Opening LocalDevVPN"
-        case .discovering: "Finding this iPhone"
-        case .connecting: "Connecting"
-        case .active: "Active"
-        case .stopping: "Stopping"
-        case .failed: "Failed"
+        case .idle: String(localized: "Inactive")
+        case .openingLocalDevVPN: String(localized: "Opening LocalDevVPN")
+        case .discovering: String(localized: "Finding this iPhone")
+        case .connecting: String(localized: "Connecting")
+        case .active: String(localized: "Active")
+        case .stopping: String(localized: "Stopping")
+        case .failed: String(localized: "Failed")
         }
     }
 
@@ -348,10 +348,10 @@ struct ConnectionHealthView: View {
 
     private var diagnosticResultStatus: String {
         switch diagnostics.state {
-        case .notRun: "Not run"
-        case .running: "Running"
-        case .passed: "Passed"
-        case .failed: "Failed"
+        case .notRun: String(localized: "Not run")
+        case .running: String(localized: "Running")
+        case .passed: String(localized: "Passed")
+        case .failed: String(localized: "Failed")
         }
     }
 }

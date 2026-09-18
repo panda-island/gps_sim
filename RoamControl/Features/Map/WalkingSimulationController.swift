@@ -12,9 +12,9 @@ enum WalkingPace: Double, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .relaxed: "Relaxed"
-        case .normal: "Normal"
-        case .brisk: "Brisk"
+        case .relaxed: String(localized: "Relaxed")
+        case .normal: String(localized: "Normal")
+        case .brisk: String(localized: "Brisk")
         }
     }
 

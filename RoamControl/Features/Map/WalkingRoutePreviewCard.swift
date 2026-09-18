@@ -324,7 +324,7 @@ struct WalkingRoutePreviewCard: View {
                 .fixedSize(horizontal: false, vertical: true)
 
         case .failed(let message):
-            Text(message)
+            Text(roamLocalized(message))
                 .font(.caption)
                 .foregroundStyle(.red)
                 .frame(maxWidth: .infinity, alignment: .center)
@@ -361,26 +361,26 @@ struct WalkingRoutePreviewCard: View {
 
     private var phaseTitle: String {
         switch simulation.phase {
-        case .idle: "Walking route"
-        case .preparing: "Preparing walk"
-        case .walking: "Walking"
-        case .paused: "Walk paused"
-        case .arrived: "Arrived"
-        case .stopping: "Ending walk"
-        case .failed: "Walking unavailable"
+        case .idle: String(localized: "Walking route")
+        case .preparing: String(localized: "Preparing walk")
+        case .walking: String(localized: "Walking")
+        case .paused: String(localized: "Walk paused")
+        case .arrived: String(localized: "Arrived")
+        case .stopping: String(localized: "Ending walk")
+        case .failed: String(localized: "Walking unavailable")
         }
     }
 
     private var phaseSubtitle: String {
         switch simulation.phase {
         case .idle, .preparing, .failed:
-            "Current Location to \(destination.name)"
+            String(localized: "Current Location to \(destination.name)")
         case .walking, .paused:
-            "Heading to \(destination.name) · \(Int((simulation.progress * 100).rounded()))%"
+            String(localized: "Heading to \(destination.name) · \(Int((simulation.progress * 100).rounded()))%")
         case .arrived:
-            "Location active at \(destination.name)"
+            String(localized: "Location active at \(destination.name)")
         case .stopping:
-            "Restoring this iPhone's real location"
+            String(localized: "Restoring this iPhone's real location")
         }
     }
 
@@ -427,17 +427,17 @@ struct WalkingRoutePreviewCard: View {
         let metresPerMile = 1_609.344
         guard distance >= metresPerMile else {
             let yards = max(0, distance / 0.9144)
-            return "\(Int(yards.rounded())) yd"
+            return String(localized: "\(Int(yards.rounded())) yd")
         }
 
         let miles = distance / metresPerMile
         return miles.formatted(
             .number.precision(.fractionLength(miles < 10 ? 1 : 0))
-        ) + " mi"
+        ) + String(localized: " mi")
     }
 
     private var durationText: String {
-        guard simulation.phase != .arrived else { return "Complete" }
+        guard simulation.phase != .arrived else { return String(localized: "Complete") }
         let duration = simulation.totalDistance > 0
             ? simulation.remainingDuration
             : route.expectedTravelTime
@@ -445,7 +445,7 @@ struct WalkingRoutePreviewCard: View {
     }
 
     private var arrivalText: String {
-        guard simulation.phase != .arrived else { return "Now" }
+        guard simulation.phase != .arrived else { return String(localized: "Now") }
         let duration = simulation.totalDistance > 0
             ? simulation.remainingDuration
             : route.expectedTravelTime

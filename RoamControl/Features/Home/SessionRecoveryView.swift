@@ -150,7 +150,7 @@ struct SessionRecoveryView: View {
             }
 
             if let errorMessage {
-                Text(errorMessage)
+                Text(roamLocalized(errorMessage))
                     .font(.caption)
                     .foregroundStyle(.red)
                     .multilineTextAlignment(.center)
@@ -167,14 +167,14 @@ struct SessionRecoveryView: View {
 
     private var summaryText: String {
         if let destination = recovery.destination, recovery.isWalkingRoute {
-            return "Roam Control closed before it could confirm that the simulated walk to \(destination.name) ended. Continue from the last saved point or restore this iPhone's real location."
+            return String(localized: "Roam Control closed before it could confirm that the simulated walk to \(destination.name) ended. Continue from the last saved point or restore this iPhone's real location.")
         }
 
-        return "Roam Control closed before it could confirm that the simulated location at \(recovery.lastReportedLocation.name) ended. Choose what this iPhone should do next."
+        return String(localized: "Roam Control closed before it could confirm that the simulated location at \(recovery.lastReportedLocation.name) ended. Choose what this iPhone should do next.")
     }
 
     private var resumeTitle: String {
-        recovery.isWalkingRoute ? "Resume Walking" : "Resume Location"
+        recovery.isWalkingRoute ? String(localized: "Resume Walking") : String(localized: "Resume Location")
     }
 
     private func recoveryDetail(title: String, value: String, symbol: String) -> some View {
