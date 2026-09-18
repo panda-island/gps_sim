@@ -72,8 +72,8 @@ final class MapViewModel: NSObject, MKLocalSearchCompleterDelegate {
     func selectDroppedPin(at coordinate: CLLocationCoordinate2D) async {
         await selectCoordinate(
             coordinate,
-            fallbackName: "Dropped Pin",
-            fallbackDescription: "Selected from the map",
+            fallbackName: "放置的圖釘",
+            fallbackDescription: "從地圖選取",
             recenter: false
         )
     }
@@ -89,15 +89,15 @@ final class MapViewModel: NSObject, MKLocalSearchCompleterDelegate {
             resetSearchField()
             await selectCoordinate(
                 coordinate,
-                fallbackName: "Entered Location",
-                fallbackDescription: "Entered using coordinates",
+                fallbackName: "輸入的位置",
+                fallbackDescription: "使用座標輸入",
                 recenter: true
             )
             isSearching = false
             return
         case .invalid:
             searchSuggestions = []
-            errorMessage = "Enter latitude from −90 to 90 and longitude from −180 to 180."
+            errorMessage = "輸入緯度 −90 至 90，以及經度 −180 至 180。"
             return
         case .notCoordinates:
             break
@@ -204,7 +204,7 @@ final class MapViewModel: NSObject, MKLocalSearchCompleterDelegate {
         do {
             let response = try await MKLocalSearch(request: request).start()
             guard let item = response.mapItems.first else {
-                errorMessage = "No matching place found."
+                errorMessage = "找不到符合的地點。"
                 return
             }
 
@@ -227,7 +227,7 @@ final class MapViewModel: NSObject, MKLocalSearchCompleterDelegate {
         } catch is CancellationError {
             return
         } catch {
-            errorMessage = "Search is unavailable right now."
+            errorMessage = "目前無法使用搜尋。"
         }
     }
 
@@ -240,7 +240,7 @@ final class MapViewModel: NSObject, MKLocalSearchCompleterDelegate {
         errorMessage = nil
         let pendingTarget = LocationTarget(
             name: fallbackName,
-            subtitle: "Finding nearby address…",
+            subtitle: "正在尋找附近地址⋯",
             latitude: coordinate.latitude,
             longitude: coordinate.longitude
         )
@@ -362,7 +362,7 @@ final class MapViewModel: NSObject, MKLocalSearchCompleterDelegate {
                 return detail
             }
         }
-        return String(localized: "Location details unavailable")
+        return "無法取得位置詳細資訊"
     }
 
     private func requestCurrentLocation(
@@ -413,7 +413,7 @@ final class MapViewModel: NSObject, MKLocalSearchCompleterDelegate {
         case .denied, .restricted:
             isFindingRealLocation = false
             if recenter && shouldReportLocationErrors {
-                errorMessage = "Allow Location access in Settings to show your real position."
+                errorMessage = "請在「設定」中允許定位權限，以顯示你的實際位置。"
             }
         @unknown default:
             break
@@ -488,7 +488,7 @@ extension MapViewModel: CLLocationManagerDelegate {
                 if recenterOnNextRealLocation {
                     recenterOnNextRealLocation = false
                     if shouldReportLocationErrors {
-                        errorMessage = "Allow Location access in Settings to show your real position."
+                        errorMessage = "請在「設定」中允許定位權限，以顯示你的實際位置。"
                     }
                 }
             case .notDetermined:
@@ -524,7 +524,7 @@ extension MapViewModel: CLLocationManagerDelegate {
             if recenterOnNextRealLocation {
                 recenterOnNextRealLocation = false
                 if shouldReportLocationErrors {
-                    errorMessage = "Your real location is not available yet."
+                    errorMessage = "目前尚未取得你的實際位置。"
                 }
             }
         }

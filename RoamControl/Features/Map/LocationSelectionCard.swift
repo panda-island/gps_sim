@@ -39,8 +39,8 @@ struct LocationSelectionCard: View {
             isPresented: $isConfirmingStop,
             titleVisibility: .visible
         ) {
-            Button("Stop & Restore", role: .destructive, action: onStop)
-            Button("Keep Simulated Location", role: .cancel) {}
+            Button("停止並還原", role: .destructive, action: onStop)
+            Button("保留模擬位置", role: .cancel) {}
         } message: {
             Text("Roam Control will end the simulated location and restore this iPhone's real location.")
         }
@@ -96,7 +96,7 @@ struct LocationSelectionCard: View {
                 }
 
                 if isActive && !isShowingActiveTarget {
-                    Button("Stop & Restore", role: .destructive) {
+                    Button("停止並還原", role: .destructive) {
                         isConfirmingStop = true
                     }
                         .buttonStyle(.bordered)
@@ -112,7 +112,7 @@ struct LocationSelectionCard: View {
 
                 if shouldOfferLocalDevVPN {
                     Link(destination: localDevVPNInstallURL) {
-                        Label("Get LocalDevVPN", systemImage: "arrow.up.right.square")
+                        Label("取得 LocalDevVPN", systemImage: "arrow.up.right.square")
                             .font(.subheadline.weight(.semibold))
                     }
                     .frame(maxWidth: .infinity)
@@ -124,9 +124,9 @@ struct LocationSelectionCard: View {
                         .foregroundStyle(.blue)
 
                     VStack(alignment: .leading, spacing: 3) {
-                        Text("Choose a location")
+                        Text("選擇位置")
                             .font(.headline)
-                        Text("Search above or tap anywhere on the map.")
+                        Text("請在上方搜尋，或點選地圖上的任意位置。")
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                     }
@@ -183,7 +183,7 @@ struct LocationSelectionCard: View {
                             .frame(width: 44, height: 44)
                     }
                     .buttonStyle(.plain)
-                    .accessibilityLabel(didCopyCoordinates ? "Location copied" : "Copy location")
+                    .accessibilityLabel(didCopyCoordinates ? "位置已複製" : "複製位置")
                 }
             }
         }
@@ -198,7 +198,7 @@ struct LocationSelectionCard: View {
                 .frame(width: 44, height: 44)
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(isFavourite ? "Remove from favourites" : "Add to favourites")
+        .accessibilityLabel(isFavourite ? "Remove from favourites" : "加入最愛")
 
         if canClearSelection {
             Button(action: onClearSelection) {
@@ -208,7 +208,7 @@ struct LocationSelectionCard: View {
                     .frame(width: 44, height: 44)
             }
             .buttonStyle(.plain)
-            .accessibilityLabel("Clear selected location")
+            .accessibilityLabel("清除選取的位置")
         }
     }
 
@@ -276,25 +276,25 @@ struct LocationSelectionCard: View {
 
     private var shouldOfferLocalDevVPN: Bool {
         guard case .failed(let message) = sessionPhase else { return false }
-        return message.localizedCaseInsensitiveContains("Install LocalDevVPN")
+        return message.localizedCaseInsensitiveContains("安裝 LocalDevVPN")
     }
 
     private var primaryTitle: String {
         switch sessionPhase {
         case .openingLocalDevVPN:
-            String(localized: "Opening LocalDevVPN…")
+            "正在開啟 LocalDevVPN⋯"
         case .discovering:
-            String(localized: "Finding This iPhone…")
+            "正在尋找此 iPhone⋯"
         case .connecting:
-            String(localized: "Starting Location…")
+            "正在開始位置控制⋯"
         case .active:
-            isShowingActiveTarget ? String(localized: "Stop & Restore") : String(localized: "Update Location")
+            isShowingActiveTarget ? "停止並還原" : "更新位置"
         case .stopping:
-            String(localized: "Restoring Real Location…")
+            "Restoring Real Location…"
         case .failed:
-            String(localized: "Try Again")
+            "再試一次"
         case .idle:
-            String(localized: "Start Location")
+            "開始位置控制"
         }
     }
 
@@ -333,21 +333,21 @@ struct LocationSelectionCard: View {
         switch sessionPhase {
         case .idle:
             return isPaired
-                ? String(localized: "Start when ready. Stop restores this iPhone's real location.")
-                : String(localized: "Pair this iPhone before starting location control.")
+                ? "準備好後即可開始。停止後會還原此 iPhone 的實際位置。"
+                : "開始位置控制前，請先配對此 iPhone。"
         case .openingLocalDevVPN:
-            return String(localized: "Roam Control will return automatically after the tunnel starts.")
+            return "Roam Control will return automatically after the tunnel starts."
         case .discovering:
-            return String(localized: "Finding the paired iPhone through the private local tunnel.")
+            return "正在透過私人本機通道尋找已配對的 iPhone。"
         case .connecting:
-            return String(localized: "Opening the secure location session.")
+            return "正在開啟安全的位置工作階段。"
         case .active(let target):
             if !isShowingActiveTarget, let location {
-                return String(localized: "Currently using \(target.name). Update to move to \(location.name).")
+                return "目前使用 \(target.name)。更新後將移動至 \(location.name)。"
             }
-            return String(localized: "This iPhone is using \(target.name). Stop & Restore ends the simulation and restores its real location.")
+            return "This iPhone is using \(target.name). Stop & Restore ends the simulation and restores its real location."
         case .stopping:
-            return String(localized: "Restoring this iPhone's real location. Keep Roam Control open until this finishes.")
+            return "Restoring this iPhone's real location. Keep Roam Control open until this finishes."
         case .failed(let message):
             return message
         }

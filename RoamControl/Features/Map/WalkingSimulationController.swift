@@ -12,9 +12,9 @@ enum WalkingPace: Double, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .relaxed: String(localized: "Relaxed")
-        case .normal: String(localized: "Normal")
-        case .brisk: String(localized: "Brisk")
+        case .relaxed: "悠閒"
+        case .normal: "正常"
+        case .brisk: "快速"
         }
     }
 
@@ -87,8 +87,8 @@ final class WalkingSimulationController {
         self.destination = destination
         if let startCoordinate = routePoints.first?.coordinate {
             routeStart = LocationTarget(
-                name: "Route Start",
-                subtitle: "Starting point for \(destination.name)",
+                name: "路線起點",
+                subtitle: "\(destination.name) 的起點",
                 latitude: startCoordinate.latitude,
                 longitude: startCoordinate.longitude
             )
@@ -126,7 +126,7 @@ final class WalkingSimulationController {
             phase == .idle || isFailed
         else { return }
         guard case .paired = appModel.pairingStatus else {
-            phase = .failed("Pair this iPhone before starting a walking session.")
+            phase = .failed("開始步行工作階段前，請先配對此 iPhone。")
             return
         }
 
@@ -318,7 +318,7 @@ final class WalkingSimulationController {
         destination: LocationTarget
     ) -> LocationTarget {
         LocationTarget(
-            name: "Walking to \(destination.name)",
+            name: "步行前往 \(destination.name)",
             subtitle: "\(Int((progress * 100).rounded()))% complete",
             latitude: coordinate.latitude,
             longitude: coordinate.longitude

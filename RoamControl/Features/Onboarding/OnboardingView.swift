@@ -45,7 +45,7 @@ struct OnboardingView: View {
                                     .frame(width: 44, height: 44)
                             }
                             .buttonStyle(.plain)
-                            .accessibilityLabel("Close introduction")
+                            .accessibilityLabel("關閉介紹")
                         }
                     }
                 }
@@ -73,7 +73,7 @@ struct OnboardingView: View {
                         }
                     }
                     .accessibilityElement(children: .ignore)
-                    .accessibilityLabel("Page \(selectedPage + 1) of \(pages.count)")
+                    .accessibilityLabel("第 \(selectedPage + 1) 頁，共 \(pages.count) 頁")
 
                     Button {
                         advance()
@@ -117,8 +117,8 @@ struct OnboardingView: View {
     }
 
     private var finalButtonTitle: String {
-        if !isLastPage { return String(localized: "Continue") }
-        return isReplay ? String(localized: "Done") : String(localized: "Set Up This iPhone")
+        if !isLastPage { return "繼續" }
+        return isReplay ? "完成" : "設定此 iPhone"
     }
 
     private var finalButtonSymbol: String {
@@ -193,7 +193,7 @@ private struct OnboardingPageView: View {
     private var usageStatisticsCard: some View {
         VStack(alignment: .leading, spacing: 12) {
             Toggle(
-                "Share Anonymous Usage Statistics",
+                "分享匿名使用統計",
                 isOn: Binding(
                     get: { appModel.sharesAnonymousUsageStatistics },
                     set: appModel.setSharesAnonymousUsageStatistics
@@ -202,7 +202,7 @@ private struct OnboardingPageView: View {
             .font(.headline)
 
             Label {
-                Text("Off by default. Never includes locations, searches, routes, pairing data or personal information.")
+                Text("預設關閉。絕不包含位置、搜尋、路線、配對資料或個人資訊。")
             } icon: {
                 Image(systemName: "hand.raised.fill")
                     .foregroundStyle(.green)
@@ -241,26 +241,26 @@ private struct OnboardingPage {
     static let pages: [OnboardingPage] = [
         OnboardingPage(
             symbol: "location.viewfinder",
-            title: String(localized: "Welcome to Roam Control"),
-            message: String(localized: "Choose where your iPhone should appear, from one simple map."),
+            title: "歡迎使用 Roam Control",
+            message: "在地圖上選擇你的 iPhone 要顯示的位置。",
             colors: [.blue, .cyan]
         ),
         OnboardingPage(
             symbol: "map.fill",
-            title: String(localized: "Pick any place"),
-            message: String(localized: "Search for a destination or tap the map, then save it as your target."),
+            title: "選擇任何地點",
+            message: "搜尋目的地或點選地圖，然後將其儲存為目標。",
             colors: [.indigo, .blue]
         ),
         OnboardingPage(
             symbol: "iphone.and.arrow.forward",
-            title: String(localized: "Pair this iPhone once"),
-            message: String(localized: "Roam Control needs one private pairing before it can control location. We'll guide you through it next."),
+            title: "只需配對此 iPhone 一次",
+            message: "Roam Control 需要先完成一次私人配對才能控制位置。接下來會引導你完成設定。",
             colors: [.green, .teal]
         ),
         OnboardingPage(
             symbol: "hand.raised.fill",
-            title: String(localized: "Private by design"),
-            message: String(localized: "Choose whether to help improve Roam Control with anonymous activity counts. Sharing starts only if you switch it on and can be changed later in Settings."),
+            title: "以隱私為核心",
+            message: "你可以選擇是否透過匿名活動計數協助改善 Roam Control。只有在你開啟後才會開始分享，也可以之後在設定中變更。",
             colors: [.indigo, .purple],
             showsUsageStatisticsControl: true
         )

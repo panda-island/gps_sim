@@ -41,8 +41,8 @@ struct SessionRecoveryView: View {
             isPresented: $isConfirmingRestore,
             titleVisibility: .visible
         ) {
-            Button("Restore Real Location", role: .destructive, action: onRestore)
-            Button("Keep Recovery Options", role: .cancel) {}
+            Button("還原實際位置", role: .destructive, action: onRestore)
+            Button("保留復原選項", role: .cancel) {}
         } message: {
             Text("Roam Control will reconnect only long enough to clear the simulated location. It will not start a new location or walking session.")
         }
@@ -74,7 +74,7 @@ struct SessionRecoveryView: View {
             }
 
             VStack(spacing: 9) {
-                Text("Previous Session Interrupted")
+                Text("上一次工作階段已中斷")
                     .font(.title2.bold())
 
                 Text(summaryText)
@@ -86,21 +86,21 @@ struct SessionRecoveryView: View {
 
             VStack(spacing: 10) {
                 recoveryDetail(
-                    title: recovery.isWalkingRoute ? "Last saved point" : "Last location",
+                    title: recovery.isWalkingRoute ? "最後儲存的位置" : "最後位置",
                     value: recovery.lastReportedLocation.name,
                     symbol: "mappin.and.ellipse"
                 )
 
                 if let destination = recovery.destination, recovery.isWalkingRoute {
                     recoveryDetail(
-                        title: "Destination",
+                        title: "目的地",
                         value: destination.name,
                         symbol: "flag.checkered"
                     )
                 }
 
                 recoveryDetail(
-                    title: "Last active",
+                    title: "最後啟用",
                     value: recovery.updatedAt.formatted(date: .abbreviated, time: .shortened),
                     symbol: "clock"
                 )
@@ -111,12 +111,12 @@ struct SessionRecoveryView: View {
             if isResuming || isRestoring {
                 HStack(spacing: 10) {
                     ProgressView()
-                    Text(isRestoring ? "Restoring this iPhone's real location…" : "Preparing the route…")
+                    Text(isRestoring ? "正在還原此 iPhone 的實際位置⋯" : "Preparing the route…")
                         .font(.subheadline.weight(.semibold))
                 }
                 .frame(maxWidth: .infinity)
 
-                Button("Cancel Restoration", role: .cancel, action: onCancel)
+                Button("取消還原", role: .cancel, action: onCancel)
                     .foregroundStyle(.secondary)
             } else {
                 Button(action: onResume) {
@@ -130,27 +130,27 @@ struct SessionRecoveryView: View {
                 Button(role: .destructive) {
                     isConfirmingRestore = true
                 } label: {
-                    Label("Restore Real Location", systemImage: "location.slash.fill")
+                    Label("還原實際位置", systemImage: "location.slash.fill")
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.bordered)
                 .controlSize(.large)
                 .disabled(!isPaired)
 
-                Button("My Real Location Is Already Back", action: onAlreadyRestored)
+                Button("我的實際位置已經恢復", action: onAlreadyRestored)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
 
             if !isPaired {
-                Label("Pair this iPhone before resuming or restoring the session.", systemImage: "iphone.and.arrow.forward")
+                Label("繼續或還原工作階段前，請先配對此 iPhone。", systemImage: "iphone.and.arrow.forward")
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
             }
 
             if let errorMessage {
-                Text(roamLocalized(errorMessage))
+                Text(errorMessage)
                     .font(.caption)
                     .foregroundStyle(.red)
                     .multilineTextAlignment(.center)
@@ -167,14 +167,14 @@ struct SessionRecoveryView: View {
 
     private var summaryText: String {
         if let destination = recovery.destination, recovery.isWalkingRoute {
-            return String(localized: "Roam Control closed before it could confirm that the simulated walk to \(destination.name) ended. Continue from the last saved point or restore this iPhone's real location.")
+            return "Roam Control closed before it could confirm that the simulated walk to \(destination.name) ended. Continue from the last saved point or restore this iPhone's real location."
         }
 
-        return String(localized: "Roam Control closed before it could confirm that the simulated location at \(recovery.lastReportedLocation.name) ended. Choose what this iPhone should do next.")
+        return "Roam Control closed before it could confirm that the simulated location at \(recovery.lastReportedLocation.name) ended. Choose what this iPhone should do next."
     }
 
     private var resumeTitle: String {
-        recovery.isWalkingRoute ? String(localized: "Resume Walking") : String(localized: "Resume Location")
+        recovery.isWalkingRoute ? "Resume Walking" : "Resume Location"
     }
 
     private func recoveryDetail(title: String, value: String, symbol: String) -> some View {

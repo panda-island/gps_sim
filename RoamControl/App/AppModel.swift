@@ -410,7 +410,7 @@ final class AppModel {
     func restoreRealLocationFromInterruptedSession() async {
         guard let recovery = interruptedSession else { return }
         guard case .paired = pairingStatus else {
-            interruptedSessionError = "Pair this iPhone before restoring its real location."
+            interruptedSessionError = "還原實際位置前，請先配對此 iPhone。"
             return
         }
 

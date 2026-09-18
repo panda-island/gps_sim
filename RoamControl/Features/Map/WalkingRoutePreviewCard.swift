@@ -32,12 +32,12 @@ struct WalkingRoutePreviewCard: View {
         .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
         .shadow(color: .black.opacity(0.15), radius: 18, y: 8)
         .confirmationDialog(
-            "Stop walking and restore this iPhone's real location?",
+            "要停止步行並還原此 iPhone 的實際位置嗎？",
             isPresented: $isConfirmingStop,
             titleVisibility: .visible
         ) {
-            Button("Stop & Restore", role: .destructive, action: onStop)
-            Button("Keep Simulated Location", role: .cancel) {}
+            Button("停止並還原", role: .destructive, action: onStop)
+            Button("保留模擬位置", role: .cancel) {}
         } message: {
             Text("Roam Control will end the simulated walk and restore your real location. Your route progress will be reset.")
         }
@@ -71,7 +71,7 @@ struct WalkingRoutePreviewCard: View {
                             .frame(width: 44, height: 44)
                     }
                     .buttonStyle(.plain)
-                    .accessibilityLabel("Close walking route")
+                    .accessibilityLabel("關閉步行路線")
                 }
             }
 
@@ -94,14 +94,14 @@ struct WalkingRoutePreviewCard: View {
     @ViewBuilder
     private var pacePicker: some View {
         if dynamicTypeSize.isAccessibilitySize {
-            Picker("Walking pace", selection: paceBinding) {
+            Picker("步行速度", selection: paceBinding) {
                 ForEach(WalkingPace.allCases) { pace in
                     Text(pace.title).tag(pace)
                 }
             }
             .pickerStyle(.menu)
         } else {
-            Picker("Walking pace", selection: paceBinding) {
+            Picker("步行速度", selection: paceBinding) {
                 ForEach(WalkingPace.allCases) { pace in
                     Text(pace.title).tag(pace)
                 }
@@ -113,17 +113,17 @@ struct WalkingRoutePreviewCard: View {
     @ViewBuilder
     private var routeMetrics: some View {
         let distance = RouteMetric(
-            title: showsProgress ? "Remaining" : "Distance",
+            title: showsProgress ? "剩餘" : "距離",
             value: distanceText,
             symbol: "point.topleft.down.to.point.bottomright.curvepath"
         )
         let duration = RouteMetric(
-            title: simulation.phase == .arrived ? "Status" : "Walking",
+            title: simulation.phase == .arrived ? "狀態" : "步行",
             value: durationText,
             symbol: simulation.phase == .arrived ? "checkmark.circle" : "clock"
         )
         let arrival = RouteMetric(
-            title: "Arrive",
+            title: "抵達",
             value: arrivalText,
             symbol: "flag.checkered"
         )
@@ -148,7 +148,7 @@ struct WalkingRoutePreviewCard: View {
         switch simulation.phase {
         case .idle:
             Button(action: onStart) {
-                Label("Start Walking", systemImage: "figure.walk.motion")
+                Label("開始步行", systemImage: "figure.walk.motion")
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
@@ -158,7 +158,7 @@ struct WalkingRoutePreviewCard: View {
         case .preparing:
             HStack(spacing: 10) {
                 ProgressView()
-                Text("Starting walking session…")
+                Text("正在開始步行工作階段⋯")
                     .font(.subheadline.weight(.medium))
             }
             .frame(maxWidth: .infinity)
@@ -180,7 +180,7 @@ struct WalkingRoutePreviewCard: View {
 
         case .arrived:
             Button(action: onWalkBack) {
-                Label("Walk Route Back", systemImage: "arrow.uturn.backward")
+                Label("沿路線返回", systemImage: "arrow.uturn.backward")
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
@@ -203,14 +203,14 @@ struct WalkingRoutePreviewCard: View {
         case .stopping:
             HStack(spacing: 10) {
                 ProgressView()
-                Text("Restoring this iPhone's real location…")
+                Text("正在還原此 iPhone 的實際位置⋯")
                     .font(.subheadline.weight(.medium))
             }
             .frame(maxWidth: .infinity)
 
         case .failed:
             Button(action: onStart) {
-                Label("Try Again", systemImage: "arrow.clockwise")
+                Label("再試一次", systemImage: "arrow.clockwise")
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
@@ -222,7 +222,7 @@ struct WalkingRoutePreviewCard: View {
     private var pauseButton: some View {
                 Button(action: onTogglePause) {
                     Label(
-                        simulation.phase == .paused ? "Resume" : "Pause",
+                        simulation.phase == .paused ? "繼續" : "暫停",
                         systemImage: simulation.phase == .paused ? "play.fill" : "pause.fill"
                     )
                     .frame(maxWidth: .infinity)
@@ -237,7 +237,7 @@ struct WalkingRoutePreviewCard: View {
                     isConfirmingStop = true
                 } label: {
             if showTitle {
-                Label("Stop & Restore", systemImage: "stop.fill")
+                Label("停止並還原", systemImage: "stop.fill")
                     .frame(maxWidth: .infinity)
             } else {
                 Image(systemName: "stop.fill")
@@ -246,12 +246,12 @@ struct WalkingRoutePreviewCard: View {
                 }
                 .buttonStyle(.bordered)
                 .controlSize(.large)
-                .accessibilityLabel("Stop walking and restore real location")
+                .accessibilityLabel("停止步行並還原實際位置")
     }
 
     private var newLocationButton: some View {
         Button(action: onChooseNewLocation) {
-            Label("New Location", systemImage: "mappin.and.ellipse")
+            Label("新位置", systemImage: "mappin.and.ellipse")
                     .frame(maxWidth: .infinity)
             }
         .buttonStyle(.bordered)
@@ -264,7 +264,7 @@ struct WalkingRoutePreviewCard: View {
                     isConfirmingStop = true
                 } label: {
             if showTitle {
-                Label("Stop & Restore", systemImage: "location.slash.fill")
+                Label("停止並還原", systemImage: "location.slash.fill")
                     .frame(maxWidth: .infinity)
             } else {
                 Image(systemName: "location.slash.fill")
@@ -273,7 +273,7 @@ struct WalkingRoutePreviewCard: View {
                 }
                 .buttonStyle(.bordered)
                 .controlSize(.large)
-                .accessibilityLabel("Stop and restore real location")
+                .accessibilityLabel("停止並還原實際位置")
     }
 
     @ViewBuilder
@@ -281,50 +281,50 @@ struct WalkingRoutePreviewCard: View {
         switch simulation.phase {
         case .idle:
             Text(isPaired
-                 ? "Your location will move along this route at the selected pace."
-                 : "Pair this iPhone before starting a walking session.")
+                 ? "你的位置會依照所選速度沿此路線移動。"
+                 : "開始步行工作階段前，請先配對此 iPhone。")
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, alignment: .center)
                 .fixedSize(horizontal: false, vertical: true)
 
         case .preparing:
-            Text("Follow the mobile-data guidance if it appears.")
+            Text("如果出現行動數據提示，請依照指示操作。")
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, alignment: .center)
                 .fixedSize(horizontal: false, vertical: true)
 
         case .walking:
-            Text("Keep Roam Control running. You can use other apps while the walk continues.")
+            Text("請讓 Roam Control 持續執行。步行期間可以使用其他 App。")
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, alignment: .center)
                 .fixedSize(horizontal: false, vertical: true)
 
         case .paused:
-            Text("Your spoofed location is being held here until you resume.")
+            Text("模擬位置會停留在此處，直到你繼續。")
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, alignment: .center)
                 .fixedSize(horizontal: false, vertical: true)
 
         case .arrived:
-            Text("The destination remains active until you stop and restore your real location.")
+            Text("目的地會保持啟用，直到你停止並還原實際位置。")
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, alignment: .center)
                 .fixedSize(horizontal: false, vertical: true)
 
         case .stopping:
-            Text("Keep Roam Control open until the real location has been restored.")
+            Text("請保持 Roam Control 開啟，直到實際位置還原。")
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, alignment: .center)
                 .fixedSize(horizontal: false, vertical: true)
 
         case .failed(let message):
-            Text(roamLocalized(message))
+            Text(message)
                 .font(.caption)
                 .foregroundStyle(.red)
                 .frame(maxWidth: .infinity, alignment: .center)
@@ -361,26 +361,26 @@ struct WalkingRoutePreviewCard: View {
 
     private var phaseTitle: String {
         switch simulation.phase {
-        case .idle: String(localized: "Walking route")
-        case .preparing: String(localized: "Preparing walk")
-        case .walking: String(localized: "Walking")
-        case .paused: String(localized: "Walk paused")
-        case .arrived: String(localized: "Arrived")
-        case .stopping: String(localized: "Ending walk")
-        case .failed: String(localized: "Walking unavailable")
+        case .idle: "步行路線"
+        case .preparing: "正在準備步行"
+        case .walking: "步行"
+        case .paused: "步行已暫停"
+        case .arrived: "已抵達"
+        case .stopping: "正在結束步行"
+        case .failed: "無法步行"
         }
     }
 
     private var phaseSubtitle: String {
         switch simulation.phase {
         case .idle, .preparing, .failed:
-            String(localized: "Current Location to \(destination.name)")
+            "目前位置 → \(destination.name)"
         case .walking, .paused:
-            String(localized: "Heading to \(destination.name) · \(Int((simulation.progress * 100).rounded()))%")
+            "前往 \(destination.name) · \(Int((simulation.progress * 100).rounded()))%"
         case .arrived:
-            String(localized: "Location active at \(destination.name)")
+            "位置目前位於 \(destination.name)"
         case .stopping:
-            String(localized: "Restoring this iPhone's real location")
+            "正在還原此 iPhone 的實際位置"
         }
     }
 
@@ -427,17 +427,17 @@ struct WalkingRoutePreviewCard: View {
         let metresPerMile = 1_609.344
         guard distance >= metresPerMile else {
             let yards = max(0, distance / 0.9144)
-            return String(localized: "\(Int(yards.rounded())) yd")
+            return "\(Int(yards.rounded())) yd"
         }
 
         let miles = distance / metresPerMile
         return miles.formatted(
             .number.precision(.fractionLength(miles < 10 ? 1 : 0))
-        ) + String(localized: " mi")
+        ) + " mi"
     }
 
     private var durationText: String {
-        guard simulation.phase != .arrived else { return String(localized: "Complete") }
+        guard simulation.phase != .arrived else { return "完成" }
         let duration = simulation.totalDistance > 0
             ? simulation.remainingDuration
             : route.expectedTravelTime
@@ -445,7 +445,7 @@ struct WalkingRoutePreviewCard: View {
     }
 
     private var arrivalText: String {
-        guard simulation.phase != .arrived else { return String(localized: "Now") }
+        guard simulation.phase != .arrived else { return "現在" }
         let duration = simulation.totalDistance > 0
             ? simulation.remainingDuration
             : route.expectedTravelTime

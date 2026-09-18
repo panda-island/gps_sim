@@ -10,7 +10,7 @@ struct ConnectionHealthView: View {
 
     var body: some View {
         List {
-            Section("Connection Health") {
+            Section("連線狀態") {
                 healthRow(
                     title: "Pairing",
                     value: pairingValue,
@@ -26,7 +26,7 @@ struct ConnectionHealthView: View {
                 )
 
                 healthRow(
-                    title: "Location Session",
+                    title: "位置工作階段",
                     value: sessionValue,
                     symbol: sessionSymbol,
                     color: sessionColor
@@ -35,16 +35,16 @@ struct ConnectionHealthView: View {
 
             Section("Restoration") {
                 Text(appModel.deviceSession.restorationStatus)
-                Text("An inactive session means Roam Control's worker has ended. Other apps may need time to acquire a fresh real location.")
+                Text("工作階段未啟用表示 Roam Control 的背景工作已結束。其他 App 可能需要一些時間才能取得新的實際位置。")
                     .foregroundStyle(.secondary)
             }
 
-            Section("Current Location") {
-                LabeledContent("Place", value: activeTarget?.name ?? "None")
-                LabeledContent("Coordinates", value: coordinatesValue)
+            Section("目前位置") {
+                LabeledContent("地點", value: activeTarget?.name ?? "無")
+                LabeledContent("座標", value: coordinatesValue)
 
                 if let activeTarget, !activeTarget.subtitle.isEmpty {
-                    LabeledContent("Area", value: activeTarget.subtitle)
+                    LabeledContent("區域", value: activeTarget.subtitle)
                 }
             }
 
@@ -53,7 +53,7 @@ struct ConnectionHealthView: View {
                     Task { await runConnectionCheck() }
                 } label: {
                     HStack {
-                        Label("Run Connection Check", systemImage: "stethoscope")
+                        Label("執行連線檢查", systemImage: "stethoscope")
                         Spacer()
                         if diagnostics.state == .running {
                             ProgressView()
@@ -70,16 +70,16 @@ struct ConnectionHealthView: View {
 
                 if let lastChecked = diagnostics.lastChecked {
                     LabeledContent(
-                        "Last checked",
+                        "最後檢查",
                         value: lastChecked.formatted(date: .omitted, time: .shortened)
                     )
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 }
             } header: {
-                Text("Connection Check")
+                Text("連線檢查")
             } footer: {
-                Text("This checks the saved pairing record and whether the paired iPhone is visible through LocalDevVPN. It never starts, changes, or stops your location.")
+                Text("這會檢查已儲存的配對紀錄，以及已配對的 iPhone 是否能透過 LocalDevVPN 找到。它不會開始、變更或停止你的位置。")
             }
 
             Section {
@@ -88,37 +88,37 @@ struct ConnectionHealthView: View {
                     didCopyDiagnostics = true
                 } label: {
                     Label(
-                        didCopyDiagnostics ? "Diagnostics Copied" : "Copy Diagnostics",
+                        didCopyDiagnostics ? "診斷資料已複製" : "複製診斷資料",
                         systemImage: didCopyDiagnostics ? "checkmark" : "doc.on.doc"
                     )
                 }
                 .foregroundStyle(didCopyDiagnostics ? .green : .primary)
             } header: {
-                Text("Support")
+                Text("支援")
             } footer: {
-                Text("Copies a status-only report you can paste into a bug report. It never includes locations, searches, pairing records, PINs, device names or error text.")
+                Text("複製僅包含狀態的報告，可貼到錯誤回報中。絕不包含位置、搜尋、配對紀錄、PIN 碼、裝置名稱或錯誤文字。")
             }
 
-            Section("Other VPNs") {
-                Text("Another VPN may affect local device connections. If it is appropriate for your network, compare a test with that VPN paused. Keep LocalDevVPN enabled when starting a location session.")
-                Text("Roam Control has not detected another VPN. This is a troubleshooting check, not a diagnosis; an iOS scheduler rejection happens before the pairing connection starts.")
+            Section("其他 VPN") {
+                Text("其他 VPN 可能影響本機裝置連線。如果你的網路環境允許，請暫停該 VPN 後進行比較測試。開始位置工作階段時請保持 LocalDevVPN 啟用。")
+                Text("Roam Control 未偵測到其他 VPN。這只是疑難排解檢查，不代表診斷結果；iOS 的排程器拒絕可能在配對連線開始前發生。")
                     .foregroundStyle(.secondary)
             }
 
-            Section("Help") {
+            Section("說明") {
                 Button {
                     isShowingDeviceSetup = true
                 } label: {
-                    Label("Pairing & Connection", systemImage: "iphone.and.arrow.forward")
+                    Label("配對與連線", systemImage: "iphone.and.arrow.forward")
                 }
                 .foregroundStyle(.primary)
 
                 Link(destination: appModel.localDevVPNInstallURL) {
-                    Label("Open LocalDevVPN in App Store", systemImage: "arrow.up.right.square")
+                    Label("在 App Store 開啟 LocalDevVPN", systemImage: "arrow.up.right.square")
                 }
             }
         }
-        .navigationTitle("Connection Health")
+        .navigationTitle("連線狀態")
         .navigationBarTitleDisplayMode(.inline)
         .onDisappear {
             diagnostics.cancel()
@@ -137,17 +137,17 @@ struct ConnectionHealthView: View {
     }
 
     private var coordinatesValue: String {
-        guard let activeTarget else { return String(localized: "None") }
+        guard let activeTarget else { return "無" }
         return String(format: "%.5f, %.5f", activeTarget.latitude, activeTarget.longitude)
     }
 
     private var pairingValue: String {
         switch appModel.pairingStatus {
-        case .checking: String(localized: "Checking")
-        case .importing: String(localized: "Importing")
-        case .notPaired: String(localized: "Not paired")
-        case .paired: String(localized: "Ready")
-        case .failed: String(localized: "Problem")
+        case .checking: "檢查中"
+        case .importing: "Importing"
+        case .notPaired: "尚未配對"
+        case .paired: "準備完成"
+        case .failed: "有問題"
         }
     }
 
@@ -172,11 +172,11 @@ struct ConnectionHealthView: View {
     private var localDevVPNValue: String {
         switch diagnostics.state {
         case .notRun:
-            if case .active = appModel.deviceSession.phase { return String(localized: "Connected") }
-            return String(localized: "Not checked")
-        case .running: return String(localized: "Checking")
-        case .passed: return String(localized: "Reachable")
-        case .failed: return String(localized: "Not reachable")
+            if case .active = appModel.deviceSession.phase { return "已連線" }
+            return "尚未檢查"
+        case .running: return "檢查中"
+        case .passed: return "Reachable"
+        case .failed: return "無法連線"
         }
     }
 
@@ -204,13 +204,13 @@ struct ConnectionHealthView: View {
 
     private var sessionValue: String {
         switch appModel.deviceSession.phase {
-        case .idle: String(localized: "Inactive")
-        case .openingLocalDevVPN: String(localized: "Opening LocalDevVPN")
-        case .discovering: String(localized: "Finding this iPhone")
-        case .connecting: String(localized: "Connecting")
-        case .active: String(localized: "Active")
-        case .stopping: String(localized: "Stopping")
-        case .failed: String(localized: "Failed")
+        case .idle: "未啟用"
+        case .openingLocalDevVPN: "正在開啟 LocalDevVPN"
+        case .discovering: "正在尋找此 iPhone"
+        case .connecting: "連線中"
+        case .active: "啟用中"
+        case .stopping: "Stopping"
+        case .failed: "失敗"
         }
     }
 
@@ -305,13 +305,13 @@ struct ConnectionHealthView: View {
     }
 
     private var diagnosticsText: String {
-        let appVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "Unknown"
-        let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "Unknown"
-        let runtimeBundleIdentifier = Bundle.main.bundleIdentifier ?? "Unknown"
+        let appVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "未知"
+        let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "未知"
+        let runtimeBundleIdentifier = Bundle.main.bundleIdentifier ?? "未知"
         let permittedBackgroundTasks = (
             Bundle.main.object(forInfoDictionaryKey: "BGTaskSchedulerPermittedIdentifiers") as? [String]
-        )?.joined(separator: ", ") ?? "None"
-        let checked = diagnostics.lastChecked?.formatted(date: .numeric, time: .standard) ?? "Not run"
+        )?.joined(separator: ", ") ?? "無"
+        let checked = diagnostics.lastChecked?.formatted(date: .numeric, time: .standard) ?? "尚未執行"
 
         return """
         Roam Control Diagnostics
@@ -321,15 +321,15 @@ struct ConnectionHealthView: View {
         Runtime bundle identifier: \(runtimeBundleIdentifier)
         Runtime permitted background tasks: \(permittedBackgroundTasks)
         Pairing: \(pairingValue)
-        Last pairing failure stage (this launch): \(appModel.onDevicePairing.lastFailureStage?.rawValue ?? "None")
-        Pairing scheduler reason (this launch): \(appModel.onDevicePairing.schedulerFailureReason?.rawValue ?? "None")
+        Last pairing failure stage (this launch): \(appModel.onDevicePairing.lastFailureStage?.rawValue ?? "無")
+        Pairing scheduler reason (this launch): \(appModel.onDevicePairing.schedulerFailureReason?.rawValue ?? "無")
         Pairing task configuration: \(appModel.onDevicePairing.taskConfigurationStatus.rawValue)
         Pairing task registration: \(appModel.onDevicePairing.taskRegistrationStatus.rawValue)
         LocalDevVPN: \(localDevVPNValue)
         Session: \(sessionValue)
-        Last session issue stage (this launch): \(appModel.deviceSession.lastFailureStage?.rawValue ?? "None")
-        Last session issue disposition: \(appModel.deviceSession.lastFailureDisposition?.rawValue ?? "None")
-        Session scheduler reason (this launch): \(appModel.deviceSession.schedulerFailureReason?.rawValue ?? "None")
+        Last session issue stage (this launch): \(appModel.deviceSession.lastFailureStage?.rawValue ?? "無")
+        Last session issue disposition: \(appModel.deviceSession.lastFailureDisposition?.rawValue ?? "無")
+        Session scheduler reason (this launch): \(appModel.deviceSession.schedulerFailureReason?.rawValue ?? "無")
         Location task configuration: \(appModel.deviceSession.taskConfigurationStatus.rawValue)
         Location task registration: \(appModel.deviceSession.taskRegistrationStatus.rawValue)
         Location scheduler mode: Registration observation only (no task submitted)
@@ -348,10 +348,10 @@ struct ConnectionHealthView: View {
 
     private var diagnosticResultStatus: String {
         switch diagnostics.state {
-        case .notRun: String(localized: "Not run")
-        case .running: String(localized: "Running")
-        case .passed: String(localized: "Passed")
-        case .failed: String(localized: "Failed")
+        case .notRun: "尚未執行"
+        case .running: "Running"
+        case .passed: "Passed"
+        case .failed: "失敗"
         }
     }
 }

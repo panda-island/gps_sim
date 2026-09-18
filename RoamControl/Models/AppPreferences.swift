@@ -9,9 +9,9 @@ enum AppAppearance: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .automatic: String(localized: "Auto")
-        case .light: String(localized: "Light")
-        case .dark: String(localized: "Dark")
+        case .automatic: "自動"
+        case .light: "淺色"
+        case .dark: "深色"
         }
     }
 
@@ -33,9 +33,9 @@ enum MapDisplayStyle: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .standard: String(localized: "Standard")
-        case .satellite: String(localized: "Satellite")
-        case .hybrid: String(localized: "Hybrid")
+        case .standard: "標準"
+        case .satellite: "衛星"
+        case .hybrid: "混合"
         }
     }
 }

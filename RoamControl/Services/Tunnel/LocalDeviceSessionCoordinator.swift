@@ -80,7 +80,7 @@ final class LocalDeviceSessionCoordinator: NSObject {
     private var vpnReturnRetryUsed = false
     private var vpnReturnRetryTask: Task<Void, Never>?
 
-    private(set) var restorationStatus = "Not requested"
+    private(set) var restorationStatus = "未要求"
     private(set) var schedulerFailureReason: SchedulerFailureReason?
     private(set) var taskConfigurationStatus: BackgroundTaskConfigurationStatus = .notChecked
     private(set) var taskRegistrationStatus: BackgroundTaskRegistrationStatus = .notAttempted
@@ -180,11 +180,11 @@ final class LocalDeviceSessionCoordinator: NSObject {
         taskRegistrationStatus = .notAttempted
         lastFailureStage = nil
         lastFailureDisposition = nil
-        restorationStatus = "Not requested"
+        restorationStatus = "未要求"
         vpnReturnRetryUsed = false
 
 #if targetEnvironment(simulator)
-        phase = .failed("A real iPhone is required to start a location session.")
+        phase = .failed("開始位置工作階段需要實體 iPhone。")
 #else
         cancellationRequested = false
         pendingFailureMessage = nil
@@ -246,7 +246,7 @@ final class LocalDeviceSessionCoordinator: NSObject {
         UIApplication.shared.open(Self.enableURL) { [weak self] opened in
             guard !opened else { return }
             Task { @MainActor in
-                self?.fail("Install LocalDevVPN before starting a location session.")
+                self?.fail("開始位置工作階段前，請先安裝 LocalDevVPN。")
             }
         }
 #endif
@@ -333,7 +333,7 @@ final class LocalDeviceSessionCoordinator: NSObject {
             }
         case .active:
             cancellationRequested = true
-            restorationStatus = "Stop requested; awaiting device response"
+            restorationStatus = "已要求停止；等待裝置回應"
             restorationDisplayStartDate = .now
             phase = .stopping
             if let activeSession {
@@ -654,14 +654,14 @@ final class LocalDeviceSessionCoordinator: NSObject {
         if cancellationRequested {
             cancellationRequested = false
             if case .failure(let message) = outcome,
-               message != "The location session was stopped." {
-                restorationStatus = "Stop not confirmed; real location unverified"
+               message != "位置工作階段已停止。" {
+                restorationStatus = "尚未確認停止；實際位置尚未驗證"
                 clearPendingSession()
                 phase = .failed(message)
                 return
             }
             if restorationDisplayStartDate != nil {
-                restorationStatus = "Stop command acknowledged; real location reacquisition unverified"
+                restorationStatus = "已確認停止指令；重新取得實際位置尚未驗證"
             }
             clearPendingSession()
             finishCancelledLocationSession()
@@ -970,7 +970,7 @@ final class LocalDeviceSessionCoordinator: NSObject {
         UIApplication.shared.open(Self.enableURL) { [weak self] opened in
             guard !opened else { return }
             Task { @MainActor in
-                self?.fail("Install LocalDevVPN before starting a location session.")
+                self?.fail("開始位置工作階段前，請先安裝 LocalDevVPN。")
             }
         }
 #endif
@@ -994,7 +994,7 @@ extension LocalDeviceSessionCoordinator: NetServiceBrowserDelegate, NetServiceDe
         didNotSearch errorDict: [String: NSNumber]
     ) {
         MainActor.assumeIsolated {
-            fail("Local Network access is required to find this iPhone.")
+            fail("需要「本機網路」權限才能找到此 iPhone。")
         }
     }
 

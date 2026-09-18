@@ -46,7 +46,7 @@ struct HomeView: View {
                     }
 
                     if let coordinate = walkingSimulation.currentCoordinate {
-                        Annotation("Walking location", coordinate: coordinate) {
+                        Annotation("步行位置", coordinate: coordinate) {
                             Image(systemName: "figure.walk.circle.fill")
                                 .font(.title.weight(.semibold))
                                 .foregroundStyle(.white, .green)
@@ -126,7 +126,7 @@ struct HomeView: View {
                                 .frame(width: 44, height: 44)
                         }
                         .buttonStyle(.plain)
-                        .accessibilityLabel("Favourites and history")
+                        .accessibilityLabel("最愛與歷史紀錄")
 
                         Button {
                             isShowingSettings = true
@@ -140,7 +140,7 @@ struct HomeView: View {
                                 .frame(width: 44, height: 44)
                         }
                         .buttonStyle(.plain)
-                        .accessibilityLabel("Settings")
+                        .accessibilityLabel("設定")
                     }
                     }
 
@@ -154,10 +154,10 @@ struct HomeView: View {
                                 .foregroundStyle(.blue)
 
                             VStack(alignment: .leading, spacing: 2) {
-                                Text("Pair this iPhone")
+                                Text("配對此 iPhone")
                                     .font(.subheadline.weight(.semibold))
                                     .foregroundStyle(.primary)
-                                Text("Required before location control")
+                                Text("位置控制前必須完成")
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
                             }
@@ -214,7 +214,7 @@ struct HomeView: View {
                             }
                             .buttonStyle(.plain)
                             .disabled(mapModel.isFindingRealLocation)
-                            .accessibilityLabel("Show my current location")
+                            .accessibilityLabel("顯示我的目前位置")
                         }
                     }
                     }
@@ -302,7 +302,7 @@ struct HomeView: View {
             if let message = mapModel.errorMessage {
                 VStack {
                     Spacer()
-                    Text(roamLocalized(message))
+                    Text(message)
                         .font(.subheadline.weight(.medium))
                         .foregroundStyle(.white)
                         .padding(.horizontal, 16)
@@ -618,17 +618,17 @@ private struct CompassRoseDial: View {
             Circle()
                 .strokeBorder(.primary.opacity(0.28), lineWidth: 0.8)
 
-            Text("N")
+            Text("北")
                 .foregroundStyle(.red)
                 .offset(y: -10.5)
 
-            Text("E")
+            Text("東")
                 .offset(x: 10.5)
 
-            Text("S")
+            Text("南")
                 .offset(y: 10.5)
 
-            Text("W")
+            Text("西")
                 .offset(x: -10.5)
 
             Circle()

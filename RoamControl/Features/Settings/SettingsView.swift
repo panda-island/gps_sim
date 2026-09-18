@@ -20,9 +20,9 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("Appearance") {
+                Section("外觀") {
                     VStack(alignment: .leading, spacing: 10) {
-                        Text("Theme")
+                        Text("主題")
                             .font(.subheadline.weight(.medium))
 
                         themePicker
@@ -30,7 +30,7 @@ struct SettingsView: View {
                     .padding(.vertical, 4)
 
                     VStack(alignment: .leading, spacing: 10) {
-                        Text("Map Style")
+                        Text("地圖樣式")
                             .font(.subheadline.weight(.medium))
 
                         mapStylePicker
@@ -38,12 +38,12 @@ struct SettingsView: View {
                     .padding(.vertical, 4)
                 }
 
-                Section("Device") {
+                Section("裝置") {
                     NavigationLink {
                         ConnectionHealthView()
                             .environment(appModel)
                     } label: {
-                        Label("Connection Health", systemImage: "stethoscope")
+                        Label("連線狀態", systemImage: "stethoscope")
                     }
 
                     Button {
@@ -60,36 +60,36 @@ struct SettingsView: View {
 
                 Section {
                     Toggle(
-                        "Share Anonymous Usage Statistics",
+                        "分享匿名使用統計",
                         isOn: anonymousUsageStatisticsBinding
                     )
 
                     NavigationLink {
                         UsageStatisticsPrivacyView()
                     } label: {
-                        Label("What Is Shared", systemImage: "hand.raised.fill")
+                        Label("分享哪些資料", systemImage: "hand.raised.fill")
                     }
                 } header: {
-                    Text("Privacy")
+                    Text("隱私權")
                 } footer: {
-                    Text("Optional and off by default. Helps estimate activity from participating installations. Locations, searches and pairing data are never included.")
+                    Text("此功能為選用且預設關閉。可協助估算參與安裝的使用情況，絕不包含位置、搜尋或配對資料。")
                 }
 
-                Section("About") {
+                Section("關於") {
                     NavigationLink {
                         AboutRoamControlView()
                     } label: {
-                        Label("About Roam Control", systemImage: "info.circle")
+                        Label("關於 Roam Control", systemImage: "info.circle")
                     }
 
-                    LabeledContent("Version", value: versionText)
-                    LabeledContent("Build", value: buildNumberText)
-                    LabeledContent("Built", value: buildDateText)
+                    LabeledContent("版本", value: versionText)
+                    LabeledContent("建置", value: buildNumberText)
+                    LabeledContent("建置時間", value: buildDateText)
 
                     Button {
                         isReplayingOnboarding = true
                     } label: {
-                        Label("Replay Introduction", systemImage: "sparkles")
+                        Label("重新查看介紹", systemImage: "sparkles")
                     }
                     .foregroundStyle(.primary)
                 }
@@ -104,38 +104,38 @@ struct SettingsView: View {
 
                     updateStatusDetail
                 } header: {
-                    Text("Updates")
+                    Text("更新")
                 } footer: {
-                    Text("Checks the public GitHub release only when you tap it. Roam Control never sends location, pairing or diagnostic data with this request.")
+                    Text("只有在你點選時才會檢查 GitHub 公開版本。Roam Control 不會在此請求中傳送位置、配對或診斷資料。")
                 }
 
                 Section {
                     Link(destination: Self.bugReportURL) {
-                        Label("Report a Bug", systemImage: "ladybug")
+                        Label("回報錯誤", systemImage: "ladybug")
                     }
 
                     Link(destination: Self.featureRequestURL) {
-                        Label("Request a Feature", systemImage: "lightbulb")
+                        Label("提出功能建議", systemImage: "lightbulb")
                     }
                 } header: {
-                    Text("Feedback")
+                    Text("意見回饋")
                 } footer: {
-                    Text("GitHub may ask you to choose Bug Report or Feature Request first. For pairing or connection problems, open Connection Health and use Copy Diagnostics. Do not include pairing records, credentials or private locations.")
+                    Text("GitHub 可能會先要求你選擇「回報錯誤」或「提出功能建議」。若是配對或連線問題，請開啟「連線狀態」並使用「複製診斷資料」。請勿包含配對紀錄、憑證或私人位置。")
                 }
 
                 Section {
-                    Button("Reset Roam Control", role: .destructive) {
+                    Button("重設 Roam Control", role: .destructive) {
                         isConfirmingReset = true
                     }
                 } footer: {
-                    Text("This clears the pairing record and local app settings, then shows onboarding again. It does not remove or change LocalDevVPN.")
+                    Text("這會清除配對紀錄與本機 App 設定，然後再次顯示導覽。不會移除或變更 LocalDevVPN。")
                 }
             }
-            .navigationTitle("Settings")
+            .navigationTitle("設定")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Done") { dismiss() }
+                    Button("完成") { dismiss() }
                 }
             }
         }
@@ -149,32 +149,32 @@ struct SettingsView: View {
                 .environment(appModel)
         }
         .confirmationDialog(
-            "Reset Roam Control?",
+            "要重設 Roam Control 嗎？",
             isPresented: $isConfirmingReset,
             titleVisibility: .visible
         ) {
-            Button("Reset App", role: .destructive) {
+            Button("重設 App", role: .destructive) {
                 Task { await resetApp() }
             }
         } message: {
-            Text("Your pairing record and local choices will be removed. You will return to the welcome screen.")
+            Text("你的配對紀錄與本機設定將被移除，之後會返回歡迎畫面。")
         }
-        .alert("Reset could not finish", isPresented: isShowingResetError) {
-            Button("OK", role: .cancel) {
+        .alert("無法完成重設", isPresented: isShowingResetError) {
+            Button("好", role: .cancel) {
                 resetError = nil
             }
         } message: {
-            Text(resetError ?? "Please try again.")
+            Text(resetError ?? "請再試一次。")
         }
     }
 
     private var connectionLabel: String {
         switch appModel.connectionState {
-        case .notConfigured: String(localized: "Not paired")
-        case .ready: String(localized: "Ready")
-        case .connecting: String(localized: "Connecting")
-        case .active: String(localized: "Active")
-        case .failed: String(localized: "Problem")
+        case .notConfigured: "尚未配對"
+        case .ready: "準備完成"
+        case .connecting: "連線中"
+        case .active: "啟用中"
+        case .failed: "有問題"
         }
     }
 
@@ -196,7 +196,7 @@ struct SettingsView: View {
     @ViewBuilder
     private var themePicker: some View {
         if dynamicTypeSize.isAccessibilitySize {
-            Picker("Theme", selection: appearanceBinding) {
+            Picker("主題", selection: appearanceBinding) {
                 ForEach(AppAppearance.allCases) { appearance in
                     Label(appearance.title, systemImage: appearance.systemImage)
                         .tag(appearance)
@@ -204,7 +204,7 @@ struct SettingsView: View {
             }
             .pickerStyle(.menu)
         } else {
-            Picker("Theme", selection: appearanceBinding) {
+            Picker("主題", selection: appearanceBinding) {
                 ForEach(AppAppearance.allCases) { appearance in
                     Label(appearance.title, systemImage: appearance.systemImage)
                         .tag(appearance)
@@ -218,14 +218,14 @@ struct SettingsView: View {
     @ViewBuilder
     private var mapStylePicker: some View {
         if dynamicTypeSize.isAccessibilitySize {
-            Picker("Map Style", selection: mapStyleBinding) {
+            Picker("地圖樣式", selection: mapStyleBinding) {
                 ForEach(MapDisplayStyle.allCases) { style in
                     Text(style.title).tag(style)
                 }
             }
             .pickerStyle(.menu)
         } else {
-            Picker("Map Style", selection: mapStyleBinding) {
+            Picker("地圖樣式", selection: mapStyleBinding) {
                 ForEach(MapDisplayStyle.allCases) { style in
                     Text(style.title).tag(style)
                 }
@@ -239,7 +239,7 @@ struct SettingsView: View {
     private var pairingConnectionLabel: some View {
         if dynamicTypeSize.isAccessibilitySize {
             VStack(alignment: .leading, spacing: 3) {
-                Text("Pairing & Connection")
+                Text("配對與連線")
                 Text(connectionLabel)
                     .font(.caption)
                     .foregroundStyle(.secondary)
@@ -247,7 +247,7 @@ struct SettingsView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
         } else {
             HStack {
-                Text("Pairing & Connection")
+                Text("配對與連線")
                 Spacer()
                 Text(connectionLabel)
                     .foregroundStyle(.secondary)
@@ -279,7 +279,7 @@ struct SettingsView: View {
 
     private var buildNumberText: String {
         let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String
-        return build ?? "Unknown"
+        return build ?? "未知"
     }
 
     private var buildDateText: String {
@@ -296,15 +296,15 @@ struct SettingsView: View {
             let executableURL = Bundle.main.executableURL,
             let values = try? executableURL.resourceValues(forKeys: [.contentModificationDateKey]),
             let buildDate = values.contentModificationDate
-        else { return String(localized: "Unknown") }
+        else { return "未知" }
 
         return buildDate.formatted(date: .abbreviated, time: .shortened)
     }
 
     private var updateCheckTitle: String {
         switch releaseUpdateStatus {
-        case .checking: String(localized: "Checking for Updates…")
-        default: String(localized: "Check for Updates")
+        case .checking: "正在檢查更新⋯"
+        default: "檢查更新"
         }
     }
 
@@ -319,28 +319,28 @@ struct SettingsView: View {
             EmptyView()
         case .updateAvailable(let release):
             Link(destination: release.releaseURL) {
-                Label("Install \(release.version)", systemImage: "arrow.up.right.square")
+                Label("安裝 \(release.version)", systemImage: "arrow.up.right.square")
             }
-            Text("A newer public release is available: \(release.name).")
+            Text("有較新的公開版本可用：\(release.name)。")
                 .font(.caption)
                 .foregroundStyle(.secondary)
         case .current(let release):
-            Label("You have the latest public release (\(release.version)).", systemImage: "checkmark.circle")
+            Label("你已使用最新的公開版本（\(release.version)）。", systemImage: "checkmark.circle")
                 .font(.subheadline)
                 .foregroundStyle(.green)
         case .newerLocalBuild(let release):
             Link(destination: release.releaseURL) {
-                Label("View public release \(release.version)", systemImage: "arrow.up.right.square")
+                Label("查看公開版本 \(release.version)", systemImage: "arrow.up.right.square")
             }
-            Text("You are using a newer local test build (\(versionText) Build \(buildNumberText)).")
+            Text("你正在使用較新的本機測試版本（\(versionText) 建置 \(buildNumberText)）。")
                 .font(.caption)
                 .foregroundStyle(.secondary)
         case .noPublishedRelease:
-            Label("No public GitHub release has been published yet.", systemImage: "clock")
+            Label("目前尚未發布公開的 GitHub 版本。", systemImage: "clock")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
         case .unavailable:
-            Label("Couldn’t check GitHub right now. Try again later.", systemImage: "exclamationmark.triangle")
+            Label("目前無法檢查 GitHub，請稍後再試。", systemImage: "exclamationmark.triangle")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
         }

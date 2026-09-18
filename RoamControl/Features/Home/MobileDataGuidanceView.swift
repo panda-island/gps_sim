@@ -63,7 +63,7 @@ struct MobileDataGuidanceView: View {
                 Text(title)
                     .font(.title2.bold())
 
-                Text(roamLocalized(message))
+                Text(message)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
@@ -80,23 +80,23 @@ struct MobileDataGuidanceView: View {
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
 
-                Button("Try Again", action: onRetry)
+                Button("再試一次", action: onRetry)
                     .buttonStyle(.borderedProminent)
                     .controlSize(.large)
                     .frame(maxWidth: .infinity)
 
-                Button("Open LocalDevVPN", action: onOpenLocalDevVPN)
+                Button("開啟 LocalDevVPN", action: onOpenLocalDevVPN)
                     .buttonStyle(.bordered)
 
-                Button("I'm Using Mobile Data", action: onUseMobileData)
+                Button("我正在使用行動數據", action: onUseMobileData)
                     .buttonStyle(.bordered)
 
-                Button("Cancel", role: .cancel, action: onCancel)
+                Button("取消", role: .cancel, action: onCancel)
                     .foregroundStyle(.secondary)
             } else if guidance == .turnOff {
                 HStack(spacing: 9) {
                     ProgressView()
-                    Text("Detecting this iPhone…")
+                    Text("正在偵測此 iPhone⋯")
                         .font(.subheadline.weight(.semibold))
                 }
                 .padding(.horizontal, 18)
@@ -112,22 +112,22 @@ struct MobileDataGuidanceView: View {
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
 
-                Button("Continue", action: onMobileDataOff)
+                Button("繼續", action: onMobileDataOff)
                     .buttonStyle(.borderedProminent)
                     .controlSize(.large)
                     .frame(maxWidth: .infinity)
 
-                Button("Open LocalDevVPN", action: onOpenLocalDevVPN)
+                Button("開啟 LocalDevVPN", action: onOpenLocalDevVPN)
                     .buttonStyle(.bordered)
 
-                Button("Cancel", role: .cancel, action: onCancel)
+                Button("取消", role: .cancel, action: onCancel)
                     .foregroundStyle(.secondary)
             } else {
-                Label("Location is active", systemImage: "location.fill")
+                Label("位置控制已啟用", systemImage: "location.fill")
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.green)
 
-                Button("Done", action: onDone)
+                Button("完成", action: onDone)
                     .buttonStyle(.borderedProminent)
                     .controlSize(.large)
                     .frame(maxWidth: .infinity)
@@ -138,22 +138,22 @@ struct MobileDataGuidanceView: View {
     private var title: String {
         switch guidance {
         case .connectionHelp:
-            String(localized: "Still Connecting")
+            "仍在連線"
         case .turnOff:
-            String(localized: "Turn Mobile Data Off")
+            "關閉行動數據"
         case .turnBackOn:
-            String(localized: "Turn Mobile Data Back On")
+            "重新開啟行動數據"
         }
     }
 
     private var message: String {
         switch guidance {
         case .connectionHelp:
-            String(localized: "If you're on Wi‑Fi, make sure LocalDevVPN says Connected, then try again. Choose mobile data only when you're actually using 4G or 5G.")
+            "If you're on Wi‑Fi, make sure LocalDevVPN says Connected, then try again. Choose mobile data only when you're actually using 4G or 5G."
         case .turnOff:
-            String(localized: "Make sure LocalDevVPN is connected, switch mobile data off briefly, then return to Roam Control.")
+            "Make sure LocalDevVPN is connected, switch mobile data off briefly, then return to Roam Control."
         case .turnBackOn:
-            String(localized: "The secure location session is ready. You can restore mobile data now; spoofing will continue over 5G.")
+            "The secure location session is ready. You can restore mobile data now; spoofing will continue over 5G."
         }
     }
 

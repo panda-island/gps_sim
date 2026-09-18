@@ -21,11 +21,11 @@ struct PairingSetupView: View {
                 .padding(16)
             }
             .background(Color(uiColor: .systemGroupedBackground))
-            .navigationTitle("Device Setup")
+            .navigationTitle("裝置設定")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Done") { dismiss() }
+                    Button("完成") { dismiss() }
                 }
             }
         }
@@ -42,7 +42,7 @@ struct PairingSetupView: View {
             isPresented: $isConfirmingRemoval,
             titleVisibility: .visible
         ) {
-            Button("Remove Pairing", role: .destructive) {
+            Button("移除配對", role: .destructive) {
                 Task { await appModel.removePairingRecord() }
             }
         } message: {
@@ -83,13 +83,13 @@ struct PairingSetupView: View {
                     value: summary.importedAt.formatted(date: .abbreviated, time: .shortened)
                 )
 
-                Button("Replace Pairing File") {
+                Button("替換配對檔案") {
                     isImporting = true
                 }
                 .buttonStyle(.bordered)
                 .frame(maxWidth: .infinity)
 
-                Button("Remove Pairing", role: .destructive) {
+                Button("移除配對", role: .destructive) {
                     isConfirmingRemoval = true
                 }
                 .frame(maxWidth: .infinity)
@@ -98,7 +98,7 @@ struct PairingSetupView: View {
 
                 if appModel.onDevicePairing.isAvailableOnThisDevice {
                     if appModel.onDevicePairing.isRunning {
-                        Button("Cancel Pairing", role: .cancel) {
+                        Button("取消配對", role: .cancel) {
                             appModel.cancelOnDevicePairing()
                         }
                         .buttonStyle(.bordered)
@@ -107,7 +107,7 @@ struct PairingSetupView: View {
                         Button {
                             appModel.startOnDevicePairing()
                         } label: {
-                            Label("Pair This iPhone", systemImage: "iphone.and.arrow.forward")
+                            Label("配對此 iPhone", systemImage: "iphone.and.arrow.forward")
                                 .frame(maxWidth: .infinity)
                         }
                         .buttonStyle(.borderedProminent)
@@ -115,7 +115,7 @@ struct PairingSetupView: View {
                         .disabled(isBusy)
                     }
                 } else {
-                    Label("On-device pairing needs your physical iPhone.", systemImage: "iphone")
+                    Label("裝置配對需要你的實體 iPhone。", systemImage: "iphone")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
@@ -123,7 +123,7 @@ struct PairingSetupView: View {
                 Button {
                     isImporting = true
                 } label: {
-                    Label("Import Existing File", systemImage: "doc.badge.plus")
+                    Label("匯入現有檔案", systemImage: "doc.badge.plus")
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.bordered)
@@ -141,7 +141,7 @@ struct PairingSetupView: View {
         case .preparing:
             Divider()
             Label {
-                Text("Preparing a secure pairing session…")
+                Text("正在準備安全的配對工作階段⋯")
             } icon: {
                 ProgressView()
             }
@@ -150,17 +150,17 @@ struct PairingSetupView: View {
         case .waitingForSettings:
             Divider()
             VStack(alignment: .leading, spacing: 10) {
-                Text("Finish in Settings")
+                Text("在「設定」中完成")
                     .font(.subheadline.weight(.semibold))
                 instructionRow("Open Settings › Privacy & Security › Developer Mode.")
-                instructionRow("Tap Pair with Roam Control.")
+                instructionRow("點選「與 Roam Control 配對」。")
                 instructionRow("Use the code shown here when iOS asks for it.")
             }
 
         case .showingPIN(let pin):
             Divider()
             VStack(alignment: .leading, spacing: 8) {
-                Text("Enter this code in Settings")
+                Text("在「設定」中輸入此代碼")
                     .font(.subheadline.weight(.semibold))
                 Text(pin.map(String.init).joined(separator: " "))
                     .font(.largeTitle.weight(.semibold))
@@ -169,8 +169,8 @@ struct PairingSetupView: View {
                     .foregroundStyle(.blue)
                     .minimumScaleFactor(0.7)
                     .lineLimit(1)
-                    .accessibilityLabel("Pairing code \(pin)")
-                Text("The code is generated on this iPhone and expires with this pairing attempt.")
+                    .accessibilityLabel("配對代碼 \(pin)")
+                Text("此代碼在這部 iPhone 上產生，並會在本次配對嘗試結束時失效。")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -178,7 +178,7 @@ struct PairingSetupView: View {
         case .storing:
             Divider()
             Label {
-                Text("Securing the pairing record in Keychain…")
+                Text("正在將配對紀錄安全儲存至鑰匙圈⋯")
             } icon: {
                 ProgressView()
             }
@@ -187,7 +187,7 @@ struct PairingSetupView: View {
         case .cancelling:
             Divider()
             Label {
-                Text("Stopping pairing…")
+                Text("正在停止配對⋯")
             } icon: {
                 ProgressView()
             }
@@ -197,15 +197,15 @@ struct PairingSetupView: View {
 
     private var requirementsCard: some View {
         setupCard {
-            Text("Before connecting")
+            Text("連線前")
                 .font(.headline)
 
             requirementRow(number: "1", text: "Pair this iPhone here, or import its existing RPPairing file.")
-            requirementRow(number: "2", text: "Install LocalDevVPN and switch it on.")
-            requirementRow(number: "3", text: "Keep Developer Mode enabled on the iPhone.")
+            requirementRow(number: "2", text: "安裝 LocalDevVPN 並將其開啟。")
+            requirementRow(number: "3", text: "請在 iPhone 上保持「開發者模式」開啟。")
 
             Link(destination: localDevVPNURL) {
-                Label("View LocalDevVPN", systemImage: "arrow.up.right.square")
+                Label("查看 LocalDevVPN", systemImage: "arrow.up.right.square")
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.bordered)
@@ -219,7 +219,7 @@ struct PairingSetupView: View {
 
     private var privacyCard: some View {
         setupCard {
-            Label("Stored securely", systemImage: "lock.shield")
+            Label("已安全儲存", systemImage: "lock.shield")
                 .font(.headline)
                 .foregroundStyle(.green)
 
@@ -251,7 +251,7 @@ struct PairingSetupView: View {
                 .fixedSize(horizontal: false, vertical: true)
         }
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Step \(number). \(text)")
+        .accessibilityLabel("步驟 \(number)：\(text)")
     }
 
     private func instructionRow(_ text: String) -> some View {
@@ -345,36 +345,36 @@ struct PairingSetupView: View {
 
     private var statusTitle: String {
         switch appModel.onDevicePairing.phase {
-        case .preparing: return String(localized: "Preparing pairing")
-        case .waitingForSettings: return String(localized: "Ready in Settings")
-        case .showingPIN: return String(localized: "Pairing code ready")
-        case .storing: return String(localized: "Finishing pairing")
-        case .cancelling: return String(localized: "Stopping pairing")
-        case .failed: return String(localized: "Pairing problem")
+        case .preparing: return "正在準備配對"
+        case .waitingForSettings: return "已準備好，請到設定完成"
+        case .showingPIN: return "配對代碼已準備好"
+        case .storing: return "正在完成配對"
+        case .cancelling: return "正在停止配對"
+        case .failed: return "配對問題"
         case .idle, .success: break
         }
 
         switch appModel.pairingStatus {
-        case .checking: return String(localized: "Checking this iPhone")
-        case .importing: return String(localized: "Checking pairing file")
-        case .notPaired: return String(localized: "Pairing required")
-        case .paired: return String(localized: "Pairing file ready")
-        case .failed: return String(localized: "Pairing problem")
+        case .checking: return "正在檢查此 iPhone"
+        case .importing: return "正在檢查配對檔案"
+        case .notPaired: return "需要配對"
+        case .paired: return "配對檔案已準備好"
+        case .failed: return "配對問題"
         }
     }
 
     private var statusMessage: String {
         switch appModel.onDevicePairing.phase {
         case .preparing:
-            return String(localized: "Starting a private session on this iPhone.")
+            return "正在此 iPhone 上開始私人工作階段。"
         case .waitingForSettings:
-            return String(localized: "Roam Control is visible to the iOS pairing screen.")
+            return "Roam Control 已出現在 iOS 配對畫面。"
         case .showingPIN:
-            return String(localized: "Enter the six-digit code in Settings to confirm.")
+            return "請在「設定」中輸入六位數代碼以確認。"
         case .storing:
-            return String(localized: "The handshake worked. Saving its keys securely.")
+            return "握手成功，正在安全儲存金鑰。"
         case .cancelling:
-            return String(localized: "Closing the local session and advertisement.")
+            return "正在關閉本機工作階段與廣播。"
         case .failed(let message):
             return message
         case .idle, .success:
@@ -383,15 +383,15 @@ struct PairingSetupView: View {
 
         switch appModel.pairingStatus {
         case .checking:
-            return String(localized: "Looking for a securely stored pairing record.")
+            return "正在尋找安全儲存的配對紀錄。"
         case .importing:
-            return String(localized: "Validating the record and its keys.")
+            return "正在驗證紀錄與金鑰。"
         case .notPaired:
             return appModel.onDevicePairing.isAvailableOnThisDevice
-                ? String(localized: "Create the pairing securely on this iPhone, or import an existing file.")
-                : String(localized: "Connect your physical iPhone to create the pairing, or import an existing file.")
+                ? "Create the pairing securely on this iPhone, or import an existing file."
+                : "連接實體 iPhone 以建立配對，或匯入現有檔案。"
         case .paired:
-            return String(localized: "Roam Control can use this record when the LocalDevVPN session layer is connected.")
+            return "Roam Control can use this record when the LocalDevVPN session layer is connected."
         case .failed(let message):
             return message
         }
