@@ -1,0 +1,51 @@
+name: Build unsigned IPA
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build-ipa:
+    runs-on: macos-15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Build Release archive (unsigned)
+        run: |
+          set -euo pipefail
+          xcodebuild \
+            -project RoamControl.xcodeproj \
+            -scheme RoamControl \
+            -configuration Release \
+            -sdk iphoneos \
+            -archivePath "$RUNNER_TEMP/RoamControl.xcarchive" \
+            archive \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY=""
+
+      - name: Package IPA
+        run: |
+          set -euo pipefail
+          APP="$RUNNER_TEMP/RoamControl.xcarchive/Products/Applications/RoamControl.app"
+          test -d "$APP"
+          mkdir -p "$RUNNER_TEMP/Payload"
+          cp -R "$APP" "$RUNNER_TEMP/Payload/"
+          cd "$RUNNER_TEMP"
+          /usr/bin/zip -qry RoamControl-19kmh-unsigned.ipa Payload
+          mkdir -p "$GITHUB_WORKSPACE/artifacts"
+          cp RoamControl-19kmh-unsigned.ipa "$GITHUB_WORKSPACE/artifacts/"
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: RoamControl-19kmh-unsigned-IPA
+          path: artifacts/RoamControl-19kmh-unsigned.ipa
+          if-no-files-found: error
